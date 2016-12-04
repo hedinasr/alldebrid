@@ -15,4 +15,4 @@
 
 # Usage<a id="orgheadline2"></a>
 
-    ./alldebrid.sh <login> <password> <url>
+    ./alldebrid.sh <url>

@@ -21,22 +21,39 @@ debrid() {
     DEBRID="$(curl --silent -b cookie-jar "$ALLDEBRID_ROOT/service.php?link=$1&json=true")"
     if (! echo "$DEBRID" | grep '"error":""') > /dev/null
     then
-        echo 'Bad link'
+        # check error message
+        error=`echo "$DEBRID" | python -c "import sys, json; print(json.load(sys.stdin)['error'])"`
+        if [ $error = "premium" ]
+        then
+            echo "You're account is not a premium account!"
+        else
+            echo "Bad link"
+        fi
     else
-        echo "$DEBRID" | sed -e 's/^.*"link"[ ]*:[ ]*"//' -e 's/".*//' | sed 's/\\//g'
+        #echo "$DEBRID" | sed -e 's/^.*"link"[ ]*:[ ]*"//' -e 's/".*//' | sed 's/\\//g'
+        echo "$DEBRID" | python -c "import sys, json; print(json.load(sys.stdin)['link'])"
     fi
 }
 
 usage() {
-    echo 'Usage: ./alldebrid.sh <login> <password> <url>'
+    echo 'Usage: ./alldebrid.sh <url>'
     exit
 }
 
-if [ "$#" -ne 3 ]
+if [ "$#" -ne 1 ]
 then
     usage
 else
-    connect "$1" "$2"
-    debrid "$3"
+    if [ -e "cookie-jar" ]
+    then
+        debrid "$1"
+    else
+        echo "Login"
+        read login
+        echo "Password"
+        read -s password
+        connect "$login" "$password"
+        debrid "$1"
+    fi
 fi
 
