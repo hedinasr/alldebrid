@@ -3,7 +3,7 @@
 # Debrid your link using Alldebrid
 #
 # Author : Ananasr
-# Usage : alldebrid.sh <login> <password> <url>
+# Usage : alldebrid.sh <url>
 
 ALLDEBRID_ROOT='https://alldebrid.com'
 
