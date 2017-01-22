@@ -11,8 +11,8 @@
 
 # Install<a id="orgheadline1"></a>
 
-    git clone https://github.com/Ananasr/alldebrid.sh.git
+    git clone https://github.com/Ananasr/alldebrid.git
 
 # Usage<a id="orgheadline2"></a>
 
-    ./alldebrid.sh <url>
+    ./alldebrid <url>
