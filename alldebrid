@@ -6,12 +6,13 @@
 
 ALLDEBRID_ROOT="https://alldebrid.com"
 ALLDEBRID_LOGIN="register/?action=login&returnpage=%2Faccount%2F"
+COOKIE_PATH="/tmp/cookie-jar"
 
 ### Connect to your Alldebrid account
 ### -> connect <login> <password>
 connect() {
     LOCATION="$(curl --silent -I "$ALLDEBRID_ROOT/$ALLDEBRID_LOGIN&login_login=$1&login_password=$2" \
-    		     -c /tmp/cookie-jar | perl -n -e '/^Location: (.*)\r$/ && print "$1\n"')"
+    		     -c "$COOKIE_PATH" | perl -n -e '/^Location: (.*)\r$/ && print "$1\n"')"
     if [ "$LOCATION" != "https://alldebrid.com/account/" ]
     then
         echo 'Login failed'
@@ -22,7 +23,7 @@ connect() {
 ### Debrid your url with Alldebrid
 ### -> debrid <url>
 debrid() {
-    DEBRID="$(curl --silent -b cookie-jar "$ALLDEBRID_ROOT/service.php?link=$1&json=true")"
+    DEBRID="$(curl --silent -b "$COOKIE_PATH" "$ALLDEBRID_ROOT/service.php?link=$1&json=true")"
     if (! echo "$DEBRID" | grep '"error":""') > /dev/null
     then
         # check error message
@@ -75,7 +76,7 @@ then
     print_help
     exit 1
 else
-if [ -e "/tmp/cookie-jar" ]
+if [ -e "$COOKIE_PATH" ]
     then
         debrid "$1"
 	exit 0
